@@ -38,9 +38,11 @@ Proposed record shape:
 Recommended output design:
 
 - JSON: make this the canonical output and preserve the full normalized structure.
+- JSON canonical shape: dataset-level metadata plus a `series` array, where each series contains shared metadata and an `observations` array of yearly values.
 - CSV: export one row per normalized record.
 - Prefer long format over wide format for the main dataset.
 - Treat JSON and CSV as two renderings of the same underlying observations, not as separately designed datasets.
+- The sample structure in `examples/sweden_sample_dataset.json` is the current reference shape.
 
 Labeling guidance:
 
@@ -63,6 +65,24 @@ Observed source patterns:
 - `euda` sheets typically provide a title row, a source URL row, a header row of years, and country rows. For this project, only the `Sweden` row is extracted.
 - `fohm` sheets typically provide a title, unit, subgroup rows, year headers, one or more value rows, and then workbook-level notes and source metadata within the same sheet.
 - `fohm` notes can contain HTML fragments in the cell text and should be cleaned during extraction.
+
+Extraction approach:
+
+- Build a deterministic extractor rather than doing ad hoc manual extraction.
+- Parse `.xlsx` workbooks directly in code.
+- Implement source-specific parsers first, one for `euda` and one for `fohm`.
+- Normalize both sources into the shared canonical JSON structure.
+- Generate CSV only from the normalized JSON-level records, not from a separate parsing path.
+
+Validation approach:
+
+- Validate that every extracted year comes from an actual source header cell.
+- Validate that every observation count aligns with the parsed year columns.
+- Validate that each relevant `euda` sheet contains exactly one `Sweden` row used for extraction.
+- Validate that `fohm` note blocks and source metadata are captured when present.
+- Preserve raw text placeholders such as `..` when values are not numeric.
+- Add automated tests using representative fixture workbooks from both source families.
+- Manually spot-check a small number of extracted series against the source workbooks before treating output as final.
 
 Open questions:
 
