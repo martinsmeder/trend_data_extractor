@@ -44,6 +44,49 @@ Recommended output design:
 - Treat JSON and CSV as two renderings of the same underlying observations, not as separately designed datasets.
 - The sample structure in `examples/sweden_sample_dataset.json` is the current reference shape.
 
+Canonical JSON schema:
+
+- Top-level required fields:
+  - `dataset_id`
+  - `title`
+  - `description`
+  - `scope`
+  - `series`
+- Top-level `scope` fields:
+  - `geography`
+  - `included_sources`
+  - `is_sample`
+- Series-level required fields:
+  - `metric`
+  - `label`
+  - `source`
+  - `url`
+  - `source_file`
+  - `source_sheet`
+  - `source_description`
+  - `unit`
+  - `dimensions`
+  - `notes`
+  - `observations`
+- Series-level optional fields:
+  - `note_refs`
+  - `series_key`
+  - `source_notes_raw`
+- Observation-level required fields:
+  - `year`
+  - `value`
+- Observation-level optional fields:
+  - `value_text`
+
+Schema decisions finalized for implementation:
+
+- The canonical JSON format is `dataset metadata + series + observations`.
+- Shared metadata belongs on the series object, not on every yearly observation.
+- `observations` remains the only place where year-value pairs are stored.
+- `source_file` and `source_sheet` are retained for provenance.
+- `source_notes_raw` is optional and used only when raw note preservation adds value.
+- No additional top-level metadata fields are required before implementation begins.
+
 Labeling guidance:
 
 - Keep a short canonical `metric` id for grouping related series.

@@ -1,0 +1,1 @@
+"""Trend data extractor package."""
