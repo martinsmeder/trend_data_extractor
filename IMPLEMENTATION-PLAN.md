@@ -31,7 +31,7 @@ Planned steps:
 - Convert the title-path wording into canonical `metric`, `label`, `dimensions`, and `source_description` fields.
 - Preserve source-specific irregularities such as note markers where present.
 
-- [ ] Implement the `fohm` parser.
+- [x] Implement the `fohm` parser.
 
 - Detect the title, unit, subgroup headers, year header row, value rows, note block, and source metadata block.
 - Extract each Sweden-only series from the workbook structure.

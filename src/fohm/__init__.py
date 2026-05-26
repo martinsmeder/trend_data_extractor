@@ -1,8 +1,11 @@
-from pathlib import Path
+from src.fohm.parser import (
+    extract_fohm_dataset,
+    is_fohm_workbook,
+    validate_fohm_dataset,
+)
 
-
-def is_fohm_workbook(path: Path) -> bool:
-    return path.name.endswith("-fohm.xlsx")
-
-
-__all__ = ["is_fohm_workbook"]
+__all__ = [
+    "extract_fohm_dataset",
+    "is_fohm_workbook",
+    "validate_fohm_dataset",
+]

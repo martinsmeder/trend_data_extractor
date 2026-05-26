@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from src.euda import extract_euda_dataset, is_euda_workbook, validate_euda_dataset
-from src.fohm import is_fohm_workbook
+from src.fohm import extract_fohm_dataset, is_fohm_workbook, validate_fohm_dataset
 from src.workbook_reader import load_workbook
 
 
@@ -45,9 +45,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     extract_parser.add_argument(
         "--source",
-        choices=["euda"],
+        choices=["euda", "fohm"],
         default="euda",
-        help="Source family to extract. Only euda is implemented currently.",
+        help="Source family to extract.",
     )
 
     validate_parser = subparsers.add_parser(
@@ -66,9 +66,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     validate_parser.add_argument(
         "--source",
-        choices=["euda"],
+        choices=["euda", "fohm"],
         default="euda",
-        help="Source family to validate. Only euda is implemented currently.",
+        help="Source family to validate.",
     )
 
     return parser
@@ -106,19 +106,25 @@ def inspect_command(input_dir: Path, pretty: bool) -> int:
 
 
 def extract_command(input_dir: Path, output: Path, source: str) -> int:
-    if source != "euda":
+    if source == "euda":
+        payload = extract_euda_dataset(input_dir)
+    elif source == "fohm":
+        payload = extract_fohm_dataset(input_dir)
+    else:
         raise ValueError(f"Unsupported source: {source}")
-    payload = extract_euda_dataset(input_dir)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
     return 0
 
 
 def validate_command(input_dir: Path, dataset: Path, source: str) -> int:
-    if source != "euda":
-        raise ValueError(f"Unsupported source: {source}")
     payload = json.loads(dataset.read_text())
-    errors = validate_euda_dataset(payload, input_dir)
+    if source == "euda":
+        errors = validate_euda_dataset(payload, input_dir)
+    elif source == "fohm":
+        errors = validate_fohm_dataset(payload, input_dir)
+    else:
+        raise ValueError(f"Unsupported source: {source}")
     if errors:
         print(json.dumps({"valid": False, "errors": errors}, indent=2, ensure_ascii=False))
         return 1
