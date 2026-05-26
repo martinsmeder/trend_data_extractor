@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from src.dataset import build_combined_dataset, write_csv_dataset, write_json_dataset
 from src.euda import extract_euda_dataset, is_euda_workbook, validate_euda_dataset
 from src.fohm import extract_fohm_dataset, is_fohm_workbook, validate_fohm_dataset
 from src.workbook_reader import load_workbook
@@ -45,9 +46,29 @@ def build_parser() -> argparse.ArgumentParser:
     )
     extract_parser.add_argument(
         "--source",
-        choices=["euda", "fohm"],
+        choices=["euda", "fohm", "combined"],
         default="euda",
         help="Source family to extract.",
+    )
+
+    generate_parser = subparsers.add_parser(
+        "generate",
+        help="Generate the canonical combined JSON dataset and derived CSV export.",
+    )
+    generate_parser.add_argument(
+        "input_dir",
+        type=Path,
+        help="Directory containing .xlsx files.",
+    )
+    generate_parser.add_argument(
+        "json_output",
+        type=Path,
+        help="Path to the combined JSON output file.",
+    )
+    generate_parser.add_argument(
+        "csv_output",
+        type=Path,
+        help="Path to the derived CSV output file.",
     )
 
     validate_parser = subparsers.add_parser(
@@ -110,6 +131,8 @@ def extract_command(input_dir: Path, output: Path, source: str) -> int:
         payload = extract_euda_dataset(input_dir)
     elif source == "fohm":
         payload = extract_fohm_dataset(input_dir)
+    elif source == "combined":
+        payload = build_combined_dataset(input_dir)
     else:
         raise ValueError(f"Unsupported source: {source}")
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -132,6 +155,13 @@ def validate_command(input_dir: Path, dataset: Path, source: str) -> int:
     return 0
 
 
+def generate_command(input_dir: Path, json_output: Path, csv_output: Path) -> int:
+    dataset = build_combined_dataset(input_dir)
+    write_json_dataset(dataset, json_output)
+    write_csv_dataset(dataset, csv_output)
+    return 0
+
+
 def summarize_directory(input_dir: Path) -> list[dict[str, Any]]:
     return [summarize_workbook(path) for path in sorted(input_dir.glob("*.xlsx"))]
 
@@ -144,6 +174,8 @@ def main(argv: list[str] | None = None) -> int:
         return inspect_command(args.input_dir, args.pretty)
     if args.command == "extract":
         return extract_command(args.input_dir, args.output, args.source)
+    if args.command == "generate":
+        return generate_command(args.input_dir, args.json_output, args.csv_output)
     if args.command == "validate":
         return validate_command(args.input_dir, args.dataset, args.source)
 

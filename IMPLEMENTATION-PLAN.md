@@ -38,13 +38,13 @@ Planned steps:
 - Clean embedded HTML fragments from note cells.
 - Translate or summarize notes into English while preserving raw note text when useful.
 
-- [ ] Normalize extracted output.
+- [x] Normalize extracted output.
 
 - Map both source families into the same canonical JSON shape.
 - Keep series-level metadata attached to each series and yearly values in `observations`.
 - Preserve non-numeric placeholders through `value_text` when needed.
 
-- [ ] Generate output files.
+- [x] Generate output files.
 
 - Write the canonical JSON dataset.
 - Flatten the same normalized records into a long-form CSV export.
