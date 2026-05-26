@@ -24,7 +24,7 @@ Planned steps:
 - Handle shared strings, inline strings, numeric cells, and empty cells explicitly.
 - Keep parsing logic deterministic and auditable.
 
-- [ ] Implement the `euda` parser.
+- [x] Implement the `euda` parser.
 
 - Detect the title row, source URL row, year header row, and country rows.
 - Extract only the `Sweden` row from each relevant sheet.

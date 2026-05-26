@@ -1,8 +1,11 @@
-from pathlib import Path
+from src.euda.parser import (
+    extract_euda_dataset,
+    is_euda_workbook,
+    validate_euda_dataset,
+)
 
-
-def is_euda_workbook(path: Path) -> bool:
-    return path.name.endswith("-euda.xlsx")
-
-
-__all__ = ["is_euda_workbook"]
+__all__ = [
+    "extract_euda_dataset",
+    "is_euda_workbook",
+    "validate_euda_dataset",
+]

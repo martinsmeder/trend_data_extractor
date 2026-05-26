@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from src.euda import is_euda_workbook
+from src.euda import extract_euda_dataset, is_euda_workbook, validate_euda_dataset
 from src.fohm import is_fohm_workbook
 from src.workbook_reader import load_workbook
 
@@ -43,6 +43,33 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="Path to the JSON output file.",
     )
+    extract_parser.add_argument(
+        "--source",
+        choices=["euda"],
+        default="euda",
+        help="Source family to extract. Only euda is implemented currently.",
+    )
+
+    validate_parser = subparsers.add_parser(
+        "validate",
+        help="Validate extracted dataset output against source workbooks.",
+    )
+    validate_parser.add_argument(
+        "input_dir",
+        type=Path,
+        help="Directory containing .xlsx files.",
+    )
+    validate_parser.add_argument(
+        "dataset",
+        type=Path,
+        help="Path to the extracted JSON dataset file.",
+    )
+    validate_parser.add_argument(
+        "--source",
+        choices=["euda"],
+        default="euda",
+        help="Source family to validate. Only euda is implemented currently.",
+    )
 
     return parser
 
@@ -78,24 +105,24 @@ def inspect_command(input_dir: Path, pretty: bool) -> int:
     return 0
 
 
-def extract_command(input_dir: Path, output: Path) -> int:
-    payload = {
-        "dataset_id": "extraction-scaffold",
-        "title": "Extraction scaffold output",
-        "description": (
-            "Scaffold output produced before source-specific parsers are "
-            "implemented. This file inventories workbook structure only."
-        ),
-        "scope": {
-            "geography": "Sweden",
-            "included_sources": ["euda", "fohm"],
-            "is_sample": False,
-        },
-        "workbooks": summarize_directory(input_dir),
-        "series": [],
-    }
+def extract_command(input_dir: Path, output: Path, source: str) -> int:
+    if source != "euda":
+        raise ValueError(f"Unsupported source: {source}")
+    payload = extract_euda_dataset(input_dir)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
+    return 0
+
+
+def validate_command(input_dir: Path, dataset: Path, source: str) -> int:
+    if source != "euda":
+        raise ValueError(f"Unsupported source: {source}")
+    payload = json.loads(dataset.read_text())
+    errors = validate_euda_dataset(payload, input_dir)
+    if errors:
+        print(json.dumps({"valid": False, "errors": errors}, indent=2, ensure_ascii=False))
+        return 1
+    print(json.dumps({"valid": True, "errors": []}, indent=2, ensure_ascii=False))
     return 0
 
 
@@ -110,7 +137,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "inspect":
         return inspect_command(args.input_dir, args.pretty)
     if args.command == "extract":
-        return extract_command(args.input_dir, args.output)
+        return extract_command(args.input_dir, args.output, args.source)
+    if args.command == "validate":
+        return validate_command(args.input_dir, args.dataset, args.source)
 
     parser.error(f"Unsupported command: {args.command}")
     return 2
