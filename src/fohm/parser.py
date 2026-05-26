@@ -78,7 +78,7 @@ class ParsedFohmSheet:
     years: list[int]
     year_columns: list[int]
     source_url: str
-    source_notes_raw: list[str]
+    source_notes: list[str]
     cleaned_notes: list[str]
     values_row: Row
 
@@ -134,7 +134,7 @@ def parse_fohm_workbook(path: Path) -> dict[str, Any]:
         "dimensions": config["dimensions"],
         "notes": notes,
         "series_key": f"fohm:{config['metric']}:sweden",
-        "source_notes_raw": parsed.source_notes_raw,
+        "source_notes": parsed.source_notes,
         "observations": build_fohm_observations(parsed),
     }
 
@@ -175,7 +175,7 @@ def parse_fohm_sheet(sheet: Sheet) -> ParsedFohmSheet:
         years=years,
         year_columns=year_columns,
         source_url=source_url,
-        source_notes_raw=cleaned_notes,
+        source_notes=cleaned_notes,
         cleaned_notes=cleaned_notes,
         values_row=values_row,
     )
@@ -246,7 +246,7 @@ def validate_fohm_dataset(dataset: dict[str, Any], input_dir: Path) -> list[str]
         if series.get("source_description") != expected_source_description:
             errors.append(f"{path.name}: source description does not match source rows.")
 
-        if series.get("source_notes_raw") != parsed.source_notes_raw:
+        if series.get("source_notes") != parsed.source_notes:
             errors.append(f"{path.name}: raw notes do not match the source note block.")
 
     return errors
