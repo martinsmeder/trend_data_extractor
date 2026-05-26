@@ -14,7 +14,7 @@ def build_combined_dataset(input_dir: Path) -> dict[str, Any]:
     fohm_dataset = extract_fohm_dataset(input_dir)
 
     series = sorted(
-        [*euda_dataset["series"], *fohm_dataset["series"]],
+        [_simplify_series(item) for item in [*euda_dataset["series"], *fohm_dataset["series"]]],
         key=lambda item: (item["source"], item["metric"], item["label"]),
     )
 
@@ -25,10 +25,33 @@ def build_combined_dataset(input_dir: Path) -> dict[str, Any]:
         "scope": {
             "geography": "Sweden",
             "included_sources": ["euda", "fohm"],
-            "is_sample": False,
         },
         "series": series,
     }
+
+
+def _simplify_series(series: dict[str, Any]) -> dict[str, Any]:
+    simplified = {
+        "metric": series["metric"],
+        "label": series["label"],
+        "source": series["source"],
+        "url": series["url"],
+        "unit": series["unit"],
+        "dimensions": series.get("dimensions", {}),
+        "notes": series.get("notes", []),
+        "observations": [_simplify_observation(item) for item in series.get("observations", [])],
+    }
+    return simplified
+
+
+def _simplify_observation(observation: dict[str, Any]) -> dict[str, Any]:
+    simplified = {
+        "year": observation["year"],
+        "value": observation.get("value"),
+    }
+    if "value_text" in observation:
+        simplified["value_text"] = observation["value_text"]
+    return simplified
 
 
 def dataset_to_csv_rows(dataset: dict[str, Any]) -> tuple[list[str], list[dict[str, Any]]]:
@@ -46,16 +69,11 @@ def dataset_to_csv_rows(dataset: dict[str, Any]) -> tuple[list[str], list[dict[s
         "label",
         "source",
         "url",
-        "source_file",
-        "source_sheet",
-        "source_description",
         "unit",
-        "series_key",
         "year",
         "value",
         "value_text",
         "notes",
-        "note_refs",
         *dimension_keys,
     ]
 
@@ -66,13 +84,8 @@ def dataset_to_csv_rows(dataset: dict[str, Any]) -> tuple[list[str], list[dict[s
             "label": item.get("label"),
             "source": item.get("source"),
             "url": item.get("url"),
-            "source_file": item.get("source_file"),
-            "source_sheet": item.get("source_sheet"),
-            "source_description": item.get("source_description"),
             "unit": item.get("unit"),
-            "series_key": item.get("series_key"),
             "notes": json.dumps(item.get("notes", []), ensure_ascii=False),
-            "note_refs": json.dumps(item.get("note_refs", []), ensure_ascii=False),
         }
 
         for key in dimension_keys:
