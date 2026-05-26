@@ -1,135 +1,116 @@
-# Spec
+## Web Page
 
-## Dataset / Extractor
+Goal: publish a simple static web page that uses `sweden_dataset.json` to let researchers explore Sweden drug trend time series as interactive line charts.
 
-Goal: extract all Sweden-only data from the `fohm` and `euda` workbooks and publish it as one JSON dataset and one CSV dataset.
+Primary audience:
 
-Recommended approach:
+- Drug Epidemiology research teams at Karolinska Institutet.
+- Users who need a quick, reliable way to inspect extracted time series without reading raw spreadsheets or JSON directly.
 
-- Define one canonical internal record model first.
-- Generate JSON directly from that model.
-- Generate CSV from the same normalized records.
-- Avoid designing JSON and CSV separately unless a concrete downstream need forces them apart.
+Core product principles:
+
+- Keep the site static and easy to host.
+- Keep the interface clear, restrained, and research-oriented.
+- Make provenance and notes visible, not hidden.
+- Prefer simple exploration over dashboard complexity.
+- Avoid any backend, database, login, or API layer.
+- Build only the minimum needed for a useful first release.
+
+Implementation decisions:
+
+- Build the page as plain `HTML`, `CSS`, and `JavaScript`.
+- Use `Chart.js` for chart rendering.
+- Build a single-page site only.
+- Load the hosted `sweden_dataset.json` file directly in the browser.
+- Publish `sweden_dataset.json` and `sweden_dataset.csv` alongside the page in the same hosted static site.
+- Host the site on GitHub Pages.
+- Use the default GitHub Pages URL unless a custom domain is introduced later.
 
 Why this approach:
 
-- It keeps one source of truth for parsing and validation.
-- JSON can preserve richer structure such as notes, dimensions, and provenance.
-- CSV works best as a flattened export of the same records.
+- It minimizes infrastructure and maintenance.
+- It keeps the project easy to hand over to external research teams.
+- It creates a stable public URL tied to the repository.
+- It keeps the data flow auditable because the page reads the same exported dataset that is shared with researchers.
 
-Proposed record shape:
+Required functionality:
 
-- `metric`: canonical metric id, for example `drug_related_deaths` or `treatment_demand`
-- `label`: human-readable English label for exactly what is being measured, for example `Total number of overdose deaths`
-- `source`: `euda` or `fohm`
-- `url`: URL for the source table or workbook
-- `source_file`: local workbook filename
-- `source_sheet`: worksheet name
-- `year`: numeric year
-- `value`: numeric value when available
-- `value_text`: raw source value when a cell is not cleanly numeric
-- `unit`: for example `count`, `percent`, or other source-specific unit
-- `dimensions`: extra breakdown fields such as sex, age group, drug type, entrant type, recall period, or population segment
-- `notes`: note text attached to the record or series
-- `note_refs`: note markers from the source, if present
-- `series_key`: stable identifier for a time series across years
-- `source_description`: raw source wording from the workbook, preserved for traceability
+- Load the combined dataset from `sweden_dataset.json`.
+- Let users select a single series to view as a line chart.
+- Show chart title, unit, source, and notes near the chart.
+- Show hover values by year.
+- Provide direct download links for the JSON and CSV datasets.
+- Work well on desktop and acceptably on mobile.
 
-Recommended output design:
+Recommended page structure:
 
-- JSON: make this the canonical output and preserve the full normalized structure.
-- JSON canonical shape: dataset-level metadata plus a `series` array, where each series contains shared metadata and an `observations` array of yearly values.
-- CSV: export one row per normalized record.
-- Prefer long format over wide format for the main dataset.
-- Treat JSON and CSV as two renderings of the same underlying observations, not as separately designed datasets.
-- The sample structure in `examples/sweden_sample_dataset.json` is the current reference shape.
+- Overview section:
+  - Brief explanation of the dataset.
+  - Short description of included sources: `EUDA` and `FOHM`.
+  - Download links for `JSON` and `CSV`.
+- Chart explorer section:
+  - One main chart shown at a time.
+  - Controls for selecting source, metric, and series.
+- Metadata section:
+  - Series label.
+  - Source description.
+  - Source file or provenance details.
+  - Notes attached to the series.
+  - Compact year-value table below the chart.
 
-Canonical JSON schema:
+Chart behavior:
 
-- Top-level required fields:
-  - `dataset_id`
-  - `title`
-  - `description`
-  - `scope`
-  - `series`
-- Top-level `scope` fields:
-  - `geography`
-  - `included_sources`
-  - `is_sample`
-- Series-level required fields:
-  - `metric`
-  - `label`
-  - `source`
-  - `url`
-  - `source_file`
-  - `source_sheet`
-  - `source_description`
-  - `unit`
-  - `dimensions`
-  - `notes`
-  - `observations`
-- Series-level optional fields:
-  - `note_refs`
-  - `series_key`
-  - `source_notes_raw`
-- Observation-level required fields:
-  - `year`
-  - `value`
-- Observation-level optional fields:
-  - `value_text`
+- Use line charts only.
+- Show a single selected series by default.
+- Support hover tooltips with year and value.
+- Do not include multi-series comparison in the MVP.
 
-Schema decisions finalized for implementation:
+Design guidance:
 
-- The canonical JSON format is `dataset metadata + series + observations`.
-- Shared metadata belongs on the series object, not on every yearly observation.
-- `observations` remains the only place where year-value pairs are stored.
-- `source_file` and `source_sheet` are retained for provenance.
-- `source_notes_raw` is optional and used only when raw note preservation adds value.
-- No additional top-level metadata fields are required before implementation begins.
+- Use a clean, light visual design.
+- Favor readability and visual calm over dashboard density.
+- Use generous spacing and strong hierarchy for labels, metadata, and notes.
+- Optimize for laptop and desktop use first, since the main audience is research teams.
+- Preserve established project simplicity and avoid ornamental UI.
 
-Labeling guidance:
+Data handling expectations:
 
-- Keep a short canonical `metric` id for grouping related series.
-- Use `label` for the user-facing English description of the specific series.
-- Preserve the raw workbook wording in `source_description` so the transformation remains auditable.
-- Example: `metric = drug_related_deaths`, `label = Total number of overdose deaths`, `source_description = Overdose deaths > Trends > National definition > Number of deaths > Total`
-- Example: `metric = all_drugs_prevalence`, `label = Total prevalence of all drugs, age 16-84`, `source_description = Narkotikaanvändning (självrapporterat) efter ålder, kön och år. Andel (procent). / Totalt 16-84 år / Totalt / Senaste året`
+- The page should treat `sweden_dataset.json` as the canonical input.
+- The CSV remains a downloadable derived artifact.
+- The page should display the normalized labels and notes already prepared by the extractor.
+- No additional transformation service should exist outside the front end.
+- The chart metadata panel must update with the selected series and remain visible without extra clicks.
 
-Notes handling:
+Technical scope:
 
-- Keep notes as explicit fields.
-- Translate or summarize Swedish source notes into English for `notes`.
-- Preserve raw note text separately only if needed later.
-- Flatten notes into CSV text fields so no information is lost.
-- If notes apply to an entire series rather than a single year, they may repeat across yearly rows in CSV.
+- Use a static site only.
+- Use plain `HTML`, `CSS`, and `JavaScript`.
+- Use `Chart.js` for interactive line charts.
+- Do not introduce a backend framework or server-rendered application.
 
-Observed source patterns:
+Hosting requirements:
 
-- `euda` sheets typically provide a title row, a source URL row, a header row of years, and country rows. For this project, only the `Sweden` row is extracted.
-- `fohm` sheets typically provide a title, unit, subgroup rows, year headers, one or more value rows, and then workbook-level notes and source metadata within the same sheet.
-- `fohm` notes can contain HTML fragments in the cell text and should be cleaned during extraction.
+- Host the web page on GitHub Pages.
+- Keep deployment as simple as possible.
+- Publish the site from the repository so updates are made through normal commits.
+- Ensure the shared researcher URL points to the hosted chart page.
+- Use a simple static deployment model suitable for direct repository handoff.
 
-Extraction approach:
+Out of scope for the first version:
 
-- Build a deterministic extractor rather than doing ad hoc manual extraction.
-- Parse `.xlsx` workbooks directly in code.
-- Implement source-specific parsers first, one for `euda` and one for `fohm`.
-- Normalize both sources into the shared canonical JSON structure.
-- Generate CSV only from the normalized JSON-level records, not from a separate parsing path.
+- Authentication or user accounts.
+- Custom backend APIs.
+- Database storage.
+- Editable annotations.
+- Advanced dashboard layouts with many simultaneous charts.
+- Multi-series comparison.
+- Text search.
+- Chart image export.
+- Shareable URL state.
 
-Validation approach:
+Success criteria:
 
-- Validate that every extracted year comes from an actual source header cell.
-- Validate that every observation count aligns with the parsed year columns.
-- Validate that each relevant `euda` sheet contains exactly one `Sweden` row used for extraction.
-- Validate that `fohm` note blocks and source metadata are captured when present.
-- Preserve raw text placeholders such as `..` when values are not numeric.
-- Add automated tests using representative fixture workbooks from both source families.
-- Manually spot-check a small number of extracted series against the source workbooks before treating output as final.
-
-Open questions:
-
-- Whether to ship only one long CSV or also provide a chart-friendly wide CSV later.
-- How aggressively to normalize source labels into canonical dimension values.
-
-## Web Page
+- A researcher can open the page, understand what the dataset contains, and view a selected time series without documentation.
+- A researcher can see the relevant notes and provenance for a charted series.
+- The site can be deployed and updated with minimal operational work.
+- The final handoff package is simple: cleaned datasets, repository, and public chart URL.
