@@ -1,9 +1,9 @@
 ## Web Page
 
-- [ ] Scaffold the static site.
-- [ ] Add a single-page plain `HTML`, `CSS`, and `JavaScript` frontend.
-- [ ] Add `Chart.js` to the site.
-- [ ] Choose the hosted file layout for the page and dataset assets.
+- [x] Scaffold the static site.
+- [x] Add a single-page plain `HTML`, `CSS`, and `JavaScript` frontend.
+- [x] Add `Chart.js` to the site.
+- [x] Choose the hosted file layout for the page and dataset assets.
 
 - [ ] Implement dataset loading.
 - [ ] Load `sweden_dataset.json` in the browser.

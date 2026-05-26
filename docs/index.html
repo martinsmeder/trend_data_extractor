@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sweden Drug Trends</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">Sweden Drug Trends</p>
+        <h1>Interactive chart viewer</h1>
+        <p class="intro">
+          A static research-facing site for exploring normalized Sweden drug
+          trend data from EUDA and FOHM workbooks.
+        </p>
+      </header>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="section-label">MVP scaffold</p>
+            <h2>Site structure is in place</h2>
+          </div>
+          <span class="status-pill" id="chartjs-status">Checking Chart.js</span>
+        </div>
+        <p class="panel-copy">
+          This first pass sets up the static GitHub Pages layout. Dataset
+          loading, filtering, and chart wiring are implemented in the next
+          phase.
+        </p>
+        <ul class="layout-list">
+          <li><code>docs/index.html</code> is the single hosted page.</li>
+          <li><code>docs/assets/</code> contains CSS and JavaScript.</li>
+          <li>
+            <code>docs/data/</code> is the hosted location for published dataset
+            files.
+          </li>
+        </ul>
+      </section>
+
+      <section class="panel chart-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="section-label">Chart Area</p>
+            <h2>Chart container scaffold</h2>
+          </div>
+        </div>
+        <div class="chart-frame">
+          <canvas
+            id="chart-preview"
+            aria-label="Chart preview"
+            role="img"
+          ></canvas>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+    <script src="assets/app.js"></script>
+  </body>
+</html>
