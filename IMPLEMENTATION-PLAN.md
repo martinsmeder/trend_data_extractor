@@ -35,14 +35,15 @@
 - [x] Add explanatory copy that notes and extra details are available in the single-chart detail view.
 - [x] Keep the current detailed explorer as the single-chart mode.
 
+- [ ] Inspect and test the site end to end.
+- [ ] Verify dataset loading, chart rendering, filtering, metadata display, and download links.
+- [ ] Spot-check several series against the generated dataset outputs.
+- [ ] Make any necessary tweaks before hosting.
+
 - [ ] Add hosting configuration.
 - [ ] Configure the project for GitHub Pages deployment.
 - [ ] Ensure the built site references dataset files correctly in the hosted environment.
 - [ ] Keep deployment manual and simple for the MVP.
-
-- [ ] Test the site end to end.
-- [ ] Verify dataset loading, chart rendering, filtering, metadata display, and download links.
-- [ ] Spot-check several series against the generated dataset outputs.
 - [ ] Test the deployed GitHub Pages version after publishing.
 
 - [ ] Document usage and deployment.

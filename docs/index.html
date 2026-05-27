@@ -45,45 +45,6 @@
       <section class="panel">
         <div class="panel-heading">
           <div>
-            <p class="section-label">Dataset Loading</p>
-            <h2>Hosted dataset connection</h2>
-          </div>
-          <div class="status-stack">
-            <span class="status-pill" id="chartjs-status"
-              >Checking Chart.js</span
-            >
-            <span class="status-pill status-neutral" id="dataset-status">
-              Loading dataset
-            </span>
-          </div>
-        </div>
-        <p class="panel-copy" id="dataset-copy">
-          Fetching the hosted <code>sweden_dataset.json</code> file and
-          preparing the series for chart rendering.
-        </p>
-        <dl class="stat-grid" id="dataset-stats">
-          <div class="stat-card">
-            <dt>Dataset</dt>
-            <dd id="stat-dataset-id">Waiting</dd>
-          </div>
-          <div class="stat-card">
-            <dt>Series</dt>
-            <dd id="stat-series-count">0</dd>
-          </div>
-          <div class="stat-card">
-            <dt>Sources</dt>
-            <dd id="stat-source-count">0</dd>
-          </div>
-          <div class="stat-card">
-            <dt>Metrics</dt>
-            <dd id="stat-metric-count">0</dd>
-          </div>
-        </dl>
-      </section>
-
-      <section class="panel">
-        <div class="panel-heading">
-          <div>
             <p class="section-label">Chart Mode</p>
             <h2>Choose how to explore the dataset</h2>
           </div>
@@ -93,16 +54,16 @@
           inspect one series with notes and exact yearly values.
         </p>
         <div class="mode-switch" role="tablist" aria-label="Chart mode">
-          <button class="mode-button mode-button-active" id="mode-detail" type="button">
-            Single chart
-          </button>
-          <button class="mode-button" id="mode-overview" type="button">
+          <button class="mode-button mode-button-active" id="mode-overview" type="button">
             Overview
+          </button>
+          <button class="mode-button" id="mode-detail" type="button">
+            Single chart
           </button>
         </div>
       </section>
 
-      <section class="panel overview-mode-panel" id="overview-mode-panel" hidden>
+      <section class="panel overview-mode-panel" id="overview-mode-panel">
         <div class="panel-heading">
           <div>
             <p class="section-label">Overview Mode</p>
@@ -116,7 +77,7 @@
         <div class="overview-chart-list" id="overview-chart-list"></div>
       </section>
 
-      <div id="detail-mode-shell">
+      <div id="detail-mode-shell" hidden>
         <section class="panel">
           <div class="panel-heading">
             <div>
@@ -140,27 +101,7 @@
                 <option>Loading</option>
               </select>
             </label>
-            <label class="control-field control-field-wide">
-              <span>Series</span>
-              <select id="series-select" disabled>
-                <option>Loading</option>
-              </select>
-            </label>
           </div>
-          <dl class="selection-summary">
-            <div>
-              <dt>Selected source</dt>
-              <dd id="selected-source">Waiting</dd>
-            </div>
-            <div>
-              <dt>Selected metric</dt>
-              <dd id="selected-metric">Waiting</dd>
-            </div>
-            <div>
-              <dt>Selected series</dt>
-              <dd id="selected-series">Waiting</dd>
-            </div>
-          </dl>
         </section>
 
         <section class="panel chart-panel">

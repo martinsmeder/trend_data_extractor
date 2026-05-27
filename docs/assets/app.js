@@ -1,20 +1,9 @@
-const statusNode = document.querySelector("#chartjs-status");
-const datasetStatusNode = document.querySelector("#dataset-status");
-const datasetCopyNode = document.querySelector("#dataset-copy");
 const chartPlaceholderNode = document.querySelector("#chart-placeholder");
-const statDatasetIdNode = document.querySelector("#stat-dataset-id");
-const statSeriesCountNode = document.querySelector("#stat-series-count");
-const statSourceCountNode = document.querySelector("#stat-source-count");
-const statMetricCountNode = document.querySelector("#stat-metric-count");
 const overviewDescriptionNode = document.querySelector("#overview-description");
 const overviewSourcesNode = document.querySelector("#overview-sources");
 const explorerCopyNode = document.querySelector("#explorer-copy");
 const sourceSelectNode = document.querySelector("#source-select");
 const metricSelectNode = document.querySelector("#metric-select");
-const seriesSelectNode = document.querySelector("#series-select");
-const selectedSourceNode = document.querySelector("#selected-source");
-const selectedMetricNode = document.querySelector("#selected-metric");
-const selectedSeriesNode = document.querySelector("#selected-series");
 const chartCanvasNode = document.querySelector("#chart-preview");
 const metaUrlNode = document.querySelector("#meta-url");
 const metaNotesNode = document.querySelector("#meta-notes");
@@ -27,10 +16,6 @@ const overviewModePanelNode = document.querySelector("#overview-mode-panel");
 const overviewModeCopyNode = document.querySelector("#overview-mode-copy");
 const overviewChartListNode = document.querySelector("#overview-chart-list");
 
-if (statusNode) {
-  statusNode.textContent = window.Chart ? "Chart.js ready" : "Chart.js failed to load";
-}
-
 const appState = {
   dataset: null,
   series: [],
@@ -39,15 +24,13 @@ const appState = {
   selectedSource: "",
   selectedMetric: "",
   selectedSeriesId: "",
-  mode: "detail",
+  mode: "overview",
 };
 let chartInstance = null;
 const overviewChartInstances = [];
 
 async function loadDataset() {
   try {
-    setLoadingState();
-
     const response = await fetch("data/sweden_dataset.json");
     if (!response.ok) {
       throw new Error(`Request failed with ${response.status}`);
@@ -80,7 +63,9 @@ function parseDataset(dataset) {
 }
 
 function normalizeSeries(item, index) {
-  const observations = Array.isArray(item?.observations) ? item.observations : [];
+  const observations = Array.isArray(item?.observations)
+    ? item.observations
+    : [];
   const normalizedObservations = observations
     .map((observation) => normalizeObservation(observation))
     .sort((left, right) => left.year - right.year);
@@ -116,29 +101,10 @@ function normalizeObservation(observation) {
   };
 }
 
-function setLoadingState() {
-  if (datasetStatusNode) {
-    datasetStatusNode.textContent = "Loading dataset";
-    datasetStatusNode.className = "status-pill status-neutral";
-  }
-}
-
 function setSuccessState(parsed) {
-  if (datasetStatusNode) {
-    datasetStatusNode.textContent = "Dataset loaded";
-    datasetStatusNode.className = "status-pill status-success";
-  }
-
-  if (datasetCopyNode && appState.dataset) {
-    datasetCopyNode.textContent =
-      `${appState.dataset.title} loaded successfully from the hosted JSON file. ` +
-      "Series are now normalized into chart-ready points and selection lists.";
-  }
-
   if (overviewDescriptionNode && appState.dataset) {
     overviewDescriptionNode.textContent =
-      `${appState.dataset.description} ` +
-      "Use the chart explorer below to inspect one normalized time series at a time.";
+      `${appState.dataset.description} ` + "Select chart mode below.";
   }
 
   if (overviewSourcesNode) {
@@ -157,35 +123,9 @@ function setSuccessState(parsed) {
     explorerCopyNode.textContent =
       "Choose a source, metric, and series. The controls stay narrow and ordered so the first interaction remains obvious.";
   }
-
-  if (statDatasetIdNode && appState.dataset) {
-    statDatasetIdNode.textContent = appState.dataset.dataset_id || "Unknown";
-  }
-
-  if (statSeriesCountNode) {
-    statSeriesCountNode.textContent = String(parsed.series.length);
-  }
-
-  if (statSourceCountNode) {
-    statSourceCountNode.textContent = String(parsed.sources.length);
-  }
-
-  if (statMetricCountNode) {
-    statMetricCountNode.textContent = String(parsed.metrics.length);
-  }
 }
 
 function setErrorState(error) {
-  if (datasetStatusNode) {
-    datasetStatusNode.textContent = "Dataset failed";
-    datasetStatusNode.className = "status-pill status-error";
-  }
-
-  if (datasetCopyNode) {
-    datasetCopyNode.textContent =
-      "The hosted dataset could not be loaded. Check that docs/data/sweden_dataset.json exists and is served by the current web root.";
-  }
-
   if (overviewDescriptionNode) {
     overviewDescriptionNode.textContent =
       "The dataset overview could not be loaded because the hosted JSON file is unavailable.";
@@ -208,10 +148,6 @@ function setErrorState(error) {
     overviewModeCopyNode.textContent =
       "Overview mode is unavailable because the dataset could not be loaded.";
   }
-
-  if (statDatasetIdNode) {
-    statDatasetIdNode.textContent = "Error";
-  }
 }
 
 function buildSourceChip(source) {
@@ -222,13 +158,12 @@ function buildSourceChip(source) {
 }
 
 function initializeExplorer() {
-  if (!sourceSelectNode || !metricSelectNode || !seriesSelectNode) {
+  if (!sourceSelectNode || !metricSelectNode) {
     return;
   }
 
   sourceSelectNode.disabled = false;
   metricSelectNode.disabled = false;
-  seriesSelectNode.disabled = false;
 
   populateSourceOptions();
 
@@ -236,16 +171,13 @@ function initializeExplorer() {
   sourceSelectNode.value = appState.selectedSource;
 
   populateMetricOptions();
-  appState.selectedMetric = getAvailableMetrics(appState.selectedSource)[0] || "";
+  appState.selectedMetric =
+    getAvailableMetrics(appState.selectedSource)[0] || "";
   metricSelectNode.value = appState.selectedMetric;
-
-  populateSeriesOptions();
   appState.selectedSeriesId = getVisibleSeries()[0]?.id || "";
-  seriesSelectNode.value = appState.selectedSeriesId;
 
   sourceSelectNode.addEventListener("change", handleSourceChange);
   metricSelectNode.addEventListener("change", handleMetricChange);
-  seriesSelectNode.addEventListener("change", handleSeriesChange);
 
   updateSelectionSummary();
 }
@@ -297,24 +229,14 @@ function handleSourceChange(event) {
   populateMetricOptions();
   appState.selectedMetric = nextMetric;
   metricSelectNode.value = nextMetric;
-
-  populateSeriesOptions();
   appState.selectedSeriesId = getVisibleSeries()[0]?.id || "";
-  seriesSelectNode.value = appState.selectedSeriesId;
 
   updateSelectionSummary();
 }
 
 function handleMetricChange(event) {
   appState.selectedMetric = event.target.value;
-  populateSeriesOptions();
   appState.selectedSeriesId = getVisibleSeries()[0]?.id || "";
-  seriesSelectNode.value = appState.selectedSeriesId;
-  updateSelectionSummary();
-}
-
-function handleSeriesChange(event) {
-  appState.selectedSeriesId = event.target.value;
   updateSelectionSummary();
 }
 
@@ -338,16 +260,6 @@ function populateMetricOptions() {
   );
 }
 
-function populateSeriesOptions() {
-  replaceSelectOptions(
-    seriesSelectNode,
-    getVisibleSeries().map((series) => ({
-      value: series.id,
-      label: series.label,
-    })),
-  );
-}
-
 function replaceSelectOptions(selectNode, options) {
   if (!selectNode) {
     return;
@@ -364,11 +276,13 @@ function replaceSelectOptions(selectNode, options) {
 }
 
 function getAvailableMetrics(source) {
-  return [...new Set(
-    appState.series
-      .filter((series) => series.source === source)
-      .map((series) => series.metric),
-  )].sort();
+  return [
+    ...new Set(
+      appState.series
+        .filter((series) => series.source === source)
+        .map((series) => series.metric),
+    ),
+  ].sort();
 }
 
 function getVisibleSeries() {
@@ -381,25 +295,14 @@ function getVisibleSeries() {
 }
 
 function getSelectedSeries() {
-  return appState.series.find((series) => series.id === appState.selectedSeriesId) || null;
+  return (
+    appState.series.find((series) => series.id === appState.selectedSeriesId) ||
+    null
+  );
 }
 
 function updateSelectionSummary() {
   const selectedSeries = getSelectedSeries();
-
-  if (selectedSourceNode) {
-    selectedSourceNode.textContent = appState.selectedSource
-      ? appState.selectedSource.toUpperCase()
-      : "None";
-  }
-
-  if (selectedMetricNode) {
-    selectedMetricNode.textContent = appState.selectedMetric || "None";
-  }
-
-  if (selectedSeriesNode) {
-    selectedSeriesNode.textContent = selectedSeries?.label || "None";
-  }
 
   if (chartPlaceholderNode) {
     chartPlaceholderNode.textContent = selectedSeries
@@ -430,7 +333,8 @@ function updateChartForSelection(selectedSeries) {
   chartInstance.data.datasets[0].label = selectedSeries?.label || "Series";
   chartInstance.data.datasets[0].data = values;
   chartInstance.data.datasets[0].valueTexts = valueTexts;
-  chartInstance.options.plugins.title.text = selectedSeries?.label || "Selected series";
+  chartInstance.options.plugins.title.text =
+    selectedSeries?.label || "Selected series";
   chartInstance.options.plugins.subtitle.text = selectedSeries
     ? buildChartSubtitle(selectedSeries)
     : "";
@@ -481,7 +385,9 @@ function createOverviewChart(canvas, series) {
   return new Chart(canvas, {
     type: "line",
     data: {
-      labels: series.observations.map((observation) => String(observation.year)),
+      labels: series.observations.map((observation) =>
+        String(observation.year),
+      ),
       datasets: [
         {
           label: series.label,
@@ -550,6 +456,15 @@ function createOverviewChart(canvas, series) {
       },
       scales: {
         x: {
+          title: {
+            display: true,
+            text: "Year",
+            color: "#60574b",
+            font: {
+              size: 12,
+              weight: "700",
+            },
+          },
           grid: {
             display: false,
           },
@@ -559,6 +474,15 @@ function createOverviewChart(canvas, series) {
         },
         y: {
           beginAtZero: false,
+          title: {
+            display: true,
+            text: series.unit || "",
+            color: "#60574b",
+            font: {
+              size: 12,
+              weight: "700",
+            },
+          },
           ticks: {
             color: "#60574b",
             callback(value) {
@@ -774,7 +698,10 @@ function updateTableForSelection(selectedSeries) {
     const valueCell = document.createElement("td");
 
     yearCell.textContent = String(observation.year);
-    valueCell.textContent = observation.valueText || formatValue(observation.value) || "Not available";
+    valueCell.textContent =
+      observation.valueText ||
+      formatValue(observation.value) ||
+      "Not available";
 
     row.append(yearCell, valueCell);
     valueTableBodyNode.append(row);
