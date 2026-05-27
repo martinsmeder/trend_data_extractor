@@ -28,12 +28,12 @@
 - [x] Show source URL and notes next to the chart.
 - [x] Add a compact year-value table below the chart.
 
-- [ ] Add chart mode switching.
-- [ ] Add a simple two-mode choice between overview and single-chart detail.
-- [ ] Implement an overview mode that stacks all charts vertically with consistent spacing.
-- [ ] Keep overview mode visually minimal with charts only and no metadata or data table.
-- [ ] Add explanatory copy that notes and extra details are available in the single-chart detail view.
-- [ ] Keep the current detailed explorer as the single-chart mode.
+- [x] Add chart mode switching.
+- [x] Add a simple two-mode choice between overview and single-chart detail.
+- [x] Implement an overview mode that stacks all charts vertically with consistent spacing.
+- [x] Keep overview mode visually minimal with charts only and no metadata or data table.
+- [x] Add explanatory copy that notes and extra details are available in the single-chart detail view.
+- [x] Keep the current detailed explorer as the single-chart mode.
 
 - [ ] Add hosting configuration.
 - [ ] Configure the project for GitHub Pages deployment.

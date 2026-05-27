@@ -84,106 +84,143 @@
       <section class="panel">
         <div class="panel-heading">
           <div>
-            <p class="section-label">Chart Explorer</p>
-            <h2>Select a series</h2>
+            <p class="section-label">Chart Mode</p>
+            <h2>Choose how to explore the dataset</h2>
           </div>
         </div>
-        <p class="panel-copy" id="explorer-copy">
-          Loading selection controls from the hosted dataset.
+        <p class="panel-copy" id="mode-copy">
+          Use overview mode to scan all trends quickly, or single-chart mode to
+          inspect one series with notes and exact yearly values.
         </p>
-        <div class="control-grid">
-          <label class="control-field">
-            <span>Source</span>
-            <select id="source-select" disabled>
-              <option>Loading</option>
-            </select>
-          </label>
-          <label class="control-field">
-            <span>Metric</span>
-            <select id="metric-select" disabled>
-              <option>Loading</option>
-            </select>
-          </label>
-          <label class="control-field control-field-wide">
-            <span>Series</span>
-            <select id="series-select" disabled>
-              <option>Loading</option>
-            </select>
-          </label>
+        <div class="mode-switch" role="tablist" aria-label="Chart mode">
+          <button class="mode-button mode-button-active" id="mode-detail" type="button">
+            Single chart
+          </button>
+          <button class="mode-button" id="mode-overview" type="button">
+            Overview
+          </button>
         </div>
-        <dl class="selection-summary">
-          <div>
-            <dt>Selected source</dt>
-            <dd id="selected-source">Waiting</dd>
-          </div>
-          <div>
-            <dt>Selected metric</dt>
-            <dd id="selected-metric">Waiting</dd>
-          </div>
-          <div>
-            <dt>Selected series</dt>
-            <dd id="selected-series">Waiting</dd>
-          </div>
-        </dl>
       </section>
 
-      <section class="panel chart-panel">
+      <section class="panel overview-mode-panel" id="overview-mode-panel" hidden>
         <div class="panel-heading">
           <div>
-            <p class="section-label">Chart Area</p>
-            <h2>Selected series view</h2>
+            <p class="section-label">Overview Mode</p>
+            <h2>All chart trends</h2>
           </div>
         </div>
-        <p class="panel-copy" id="chart-placeholder">
-          Dataset loading will prepare the chart-ready series state used in the
-          next implementation phase.
+        <p class="panel-copy" id="overview-mode-copy">
+          Scan all normalized trends here. Notes and extra series details are
+          available in the single-chart view.
         </p>
-        <div class="chart-frame">
-          <canvas
-            id="chart-preview"
-            aria-label="Chart preview"
-            role="img"
-          ></canvas>
-        </div>
-        <div class="detail-stack">
-          <aside class="metadata-panel">
-            <p class="section-label">Series Metadata</p>
-            <dl class="metadata-list">
-              <div>
-                <dt>Source URL</dt>
-                <dd id="meta-url">Waiting</dd>
-              </div>
-              <div>
-                <dt>Notes</dt>
-                <dd id="meta-notes">Waiting</dd>
-              </div>
-            </dl>
-          </aside>
-        <div class="table-panel">
-          <div class="panel-heading table-heading">
+        <div class="overview-chart-list" id="overview-chart-list"></div>
+      </section>
+
+      <div id="detail-mode-shell">
+        <section class="panel">
+          <div class="panel-heading">
             <div>
-              <p class="section-label">Values</p>
-              <h3>Year and value table</h3>
+              <p class="section-label">Chart Explorer</p>
+              <h2>Select a series</h2>
             </div>
           </div>
-          <div class="table-wrap">
-            <table class="value-table">
-              <thead>
-                <tr>
-                  <th>Year</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-              <tbody id="value-table-body">
-                <tr>
-                  <td colspan="2">Waiting for a selected series.</td>
-                </tr>
-              </tbody>
-            </table>
+          <p class="panel-copy" id="explorer-copy">
+            Loading selection controls from the hosted dataset.
+          </p>
+          <div class="control-grid">
+            <label class="control-field">
+              <span>Source</span>
+              <select id="source-select" disabled>
+                <option>Loading</option>
+              </select>
+            </label>
+            <label class="control-field">
+              <span>Metric</span>
+              <select id="metric-select" disabled>
+                <option>Loading</option>
+              </select>
+            </label>
+            <label class="control-field control-field-wide">
+              <span>Series</span>
+              <select id="series-select" disabled>
+                <option>Loading</option>
+              </select>
+            </label>
           </div>
-        </div>
-        </div>
-      </section>
+          <dl class="selection-summary">
+            <div>
+              <dt>Selected source</dt>
+              <dd id="selected-source">Waiting</dd>
+            </div>
+            <div>
+              <dt>Selected metric</dt>
+              <dd id="selected-metric">Waiting</dd>
+            </div>
+            <div>
+              <dt>Selected series</dt>
+              <dd id="selected-series">Waiting</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="panel chart-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-label">Chart Area</p>
+              <h2>Selected series view</h2>
+            </div>
+          </div>
+          <p class="panel-copy" id="chart-placeholder">
+            Dataset loading will prepare the chart-ready series state used in the
+            next implementation phase.
+          </p>
+          <div class="chart-frame">
+            <canvas
+              id="chart-preview"
+              aria-label="Chart preview"
+              role="img"
+            ></canvas>
+          </div>
+          <div class="detail-stack">
+            <aside class="metadata-panel">
+              <p class="section-label">Series Metadata</p>
+              <dl class="metadata-list">
+                <div>
+                  <dt>Source URL</dt>
+                  <dd id="meta-url">Waiting</dd>
+                </div>
+                <div>
+                  <dt>Notes</dt>
+                  <dd id="meta-notes">Waiting</dd>
+                </div>
+              </dl>
+            </aside>
+            <div class="table-panel">
+              <div class="panel-heading table-heading">
+                <div>
+                  <p class="section-label">Values</p>
+                  <h3>Year and value table</h3>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table class="value-table">
+                  <thead>
+                    <tr>
+                      <th>Year</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody id="value-table-body">
+                    <tr>
+                      <td colspan="2">Waiting for a selected series.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>

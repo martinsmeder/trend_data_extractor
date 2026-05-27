@@ -19,6 +19,13 @@ const chartCanvasNode = document.querySelector("#chart-preview");
 const metaUrlNode = document.querySelector("#meta-url");
 const metaNotesNode = document.querySelector("#meta-notes");
 const valueTableBodyNode = document.querySelector("#value-table-body");
+const modeCopyNode = document.querySelector("#mode-copy");
+const detailModeButtonNode = document.querySelector("#mode-detail");
+const overviewModeButtonNode = document.querySelector("#mode-overview");
+const detailModeShellNode = document.querySelector("#detail-mode-shell");
+const overviewModePanelNode = document.querySelector("#overview-mode-panel");
+const overviewModeCopyNode = document.querySelector("#overview-mode-copy");
+const overviewChartListNode = document.querySelector("#overview-chart-list");
 
 if (statusNode) {
   statusNode.textContent = window.Chart ? "Chart.js ready" : "Chart.js failed to load";
@@ -32,8 +39,10 @@ const appState = {
   selectedSource: "",
   selectedMetric: "",
   selectedSeriesId: "",
+  mode: "detail",
 };
 let chartInstance = null;
+const overviewChartInstances = [];
 
 async function loadDataset() {
   try {
@@ -54,6 +63,8 @@ async function loadDataset() {
 
     setSuccessState(parsed);
     initializeExplorer();
+    initializeModeSwitch();
+    renderOverviewCharts();
   } catch (error) {
     setErrorState(error);
   }
@@ -193,6 +204,11 @@ function setErrorState(error) {
       "The chart explorer is unavailable because the dataset could not be loaded.";
   }
 
+  if (overviewModeCopyNode) {
+    overviewModeCopyNode.textContent =
+      "Overview mode is unavailable because the dataset could not be loaded.";
+  }
+
   if (statDatasetIdNode) {
     statDatasetIdNode.textContent = "Error";
   }
@@ -232,6 +248,47 @@ function initializeExplorer() {
   seriesSelectNode.addEventListener("change", handleSeriesChange);
 
   updateSelectionSummary();
+}
+
+function initializeModeSwitch() {
+  if (!detailModeButtonNode || !overviewModeButtonNode) {
+    return;
+  }
+
+  detailModeButtonNode.addEventListener("click", () => setMode("detail"));
+  overviewModeButtonNode.addEventListener("click", () => setMode("overview"));
+  applyMode();
+}
+
+function setMode(mode) {
+  appState.mode = mode;
+  applyMode();
+}
+
+function applyMode() {
+  const detailMode = appState.mode === "detail";
+
+  if (detailModeButtonNode) {
+    detailModeButtonNode.classList.toggle("mode-button-active", detailMode);
+  }
+
+  if (overviewModeButtonNode) {
+    overviewModeButtonNode.classList.toggle("mode-button-active", !detailMode);
+  }
+
+  if (detailModeShellNode) {
+    detailModeShellNode.hidden = !detailMode;
+  }
+
+  if (overviewModePanelNode) {
+    overviewModePanelNode.hidden = detailMode;
+  }
+
+  if (modeCopyNode) {
+    modeCopyNode.textContent = detailMode
+      ? "Use single-chart mode to inspect one series with notes, source URL, and exact yearly values."
+      : "Use overview mode to scan all trends quickly. Notes and extra details are available in single-chart view.";
+  }
 }
 
 function handleSourceChange(event) {
@@ -380,6 +437,136 @@ function updateChartForSelection(selectedSeries) {
     : "";
   chartInstance.options.scales.y.title.text = selectedSeries?.unit || "";
   chartInstance.update();
+}
+
+function renderOverviewCharts() {
+  if (!window.Chart || !overviewChartListNode) {
+    return;
+  }
+
+  destroyOverviewCharts();
+  overviewChartListNode.replaceChildren();
+
+  const cards = appState.series.map((series) => buildOverviewChartCard(series));
+  overviewChartListNode.replaceChildren(...cards.map((item) => item.card));
+
+  for (const { canvas, series } of cards) {
+    overviewChartInstances.push(createOverviewChart(canvas, series));
+  }
+}
+
+function destroyOverviewCharts() {
+  while (overviewChartInstances.length) {
+    overviewChartInstances.pop()?.destroy();
+  }
+}
+
+function buildOverviewChartCard(series) {
+  const card = document.createElement("article");
+  card.className = "overview-chart-card";
+
+  const frame = document.createElement("div");
+  frame.className = "overview-chart-frame";
+
+  const canvas = document.createElement("canvas");
+  canvas.setAttribute("aria-label", `${series.label} overview chart`);
+  canvas.setAttribute("role", "img");
+
+  frame.append(canvas);
+  card.append(frame);
+
+  return { card, canvas, series };
+}
+
+function createOverviewChart(canvas, series) {
+  return new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: series.observations.map((observation) => String(observation.year)),
+      datasets: [
+        {
+          label: series.label,
+          data: series.observations.map((observation) => observation.value),
+          borderColor: "#0f6a73",
+          backgroundColor: "rgba(15, 106, 115, 0.08)",
+          borderWidth: 2.5,
+          pointRadius: 0,
+          tension: 0.25,
+          fill: false,
+          spanGaps: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+      plugins: {
+        legend: {
+          display: false,
+        },
+        title: {
+          display: true,
+          text: series.label,
+          color: "#1d1d1b",
+          font: {
+            size: 15,
+            weight: "700",
+          },
+          padding: {
+            bottom: 6,
+          },
+        },
+        subtitle: {
+          display: true,
+          text: buildChartSubtitle(series),
+          color: "#60574b",
+          font: {
+            size: 12,
+          },
+          padding: {
+            bottom: 10,
+          },
+        },
+        tooltip: {
+          enabled: true,
+          callbacks: {
+            title(items) {
+              return items[0] ? `Year ${items[0].label}` : "";
+            },
+            label(context) {
+              if (typeof context.parsed.y === "number") {
+                return `Value: ${formatValue(context.parsed.y)}`;
+              }
+              return "Value: Not available";
+            },
+          },
+        },
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+          ticks: {
+            color: "#60574b",
+          },
+        },
+        y: {
+          beginAtZero: false,
+          ticks: {
+            color: "#60574b",
+            callback(value) {
+              return formatValue(value);
+            },
+          },
+          grid: {
+            color: "rgba(96, 87, 75, 0.14)",
+          },
+        },
+      },
+    },
+  });
 }
 
 function createChart(canvas) {

@@ -279,6 +279,55 @@ body {
   font-weight: 700;
 }
 
+.mode-switch {
+  display: inline-flex;
+  gap: 0.5rem;
+  padding: 0.35rem;
+  border: 1px solid rgba(96, 87, 75, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.mode-button {
+  padding: 0.7rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-family: Arial, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mode-button-active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.overview-chart-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.overview-chart-card {
+  padding: 1rem;
+  border: 1px solid rgba(96, 87, 75, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.overview-chart-frame {
+  height: 280px;
+}
+
+.overview-chart-frame canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .chart-frame {
   height: 360px;
   margin-top: 1rem;
@@ -407,8 +456,22 @@ code {
     grid-template-columns: 1fr;
   }
 
+  .mode-switch {
+    display: flex;
+    width: 100%;
+  }
+
+  .mode-button {
+    flex: 1 1 0;
+    text-align: center;
+  }
+
   .control-field-wide {
     grid-column: span 1;
+  }
+
+  .overview-chart-frame {
+    height: 240px;
   }
 
   .chart-frame {
