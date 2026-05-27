@@ -15,29 +15,70 @@
           A static research-facing site for exploring normalized Sweden drug
           trend data from EUDA and FOHM workbooks.
         </p>
+        <section class="overview-card">
+          <div class="overview-copy">
+            <p class="section-label">Overview</p>
+            <h2>Normalized Sweden-only dataset for research use</h2>
+            <p id="overview-description">
+              Loading dataset description and source coverage from the hosted
+              dataset file.
+            </p>
+          </div>
+          <div class="overview-meta">
+            <div>
+              <p class="meta-label">Included sources</p>
+              <div class="source-list" id="overview-sources">
+                <span class="source-chip">Loading</span>
+              </div>
+            </div>
+            <div>
+              <p class="meta-label">Downloads</p>
+              <div class="download-links">
+                <a href="data/sweden_dataset.json" download>JSON dataset</a>
+                <a href="data/sweden_dataset.csv" download>CSV dataset</a>
+              </div>
+            </div>
+          </div>
+        </section>
       </header>
 
       <section class="panel">
         <div class="panel-heading">
           <div>
-            <p class="section-label">MVP scaffold</p>
-            <h2>Site structure is in place</h2>
+            <p class="section-label">Dataset Loading</p>
+            <h2>Hosted dataset connection</h2>
           </div>
-          <span class="status-pill" id="chartjs-status">Checking Chart.js</span>
+          <div class="status-stack">
+            <span class="status-pill" id="chartjs-status"
+              >Checking Chart.js</span
+            >
+            <span class="status-pill status-neutral" id="dataset-status">
+              Loading dataset
+            </span>
+          </div>
         </div>
-        <p class="panel-copy">
-          This first pass sets up the static GitHub Pages layout. Dataset
-          loading, filtering, and chart wiring are implemented in the next
-          phase.
+        <p class="panel-copy" id="dataset-copy">
+          Fetching the hosted <code>sweden_dataset.json</code> file and
+          preparing the series for chart rendering.
         </p>
-        <ul class="layout-list">
-          <li><code>docs/index.html</code> is the single hosted page.</li>
-          <li><code>docs/assets/</code> contains CSS and JavaScript.</li>
-          <li>
-            <code>docs/data/</code> is the hosted location for published dataset
-            files.
-          </li>
-        </ul>
+        <dl class="stat-grid" id="dataset-stats">
+          <div class="stat-card">
+            <dt>Dataset</dt>
+            <dd id="stat-dataset-id">Waiting</dd>
+          </div>
+          <div class="stat-card">
+            <dt>Series</dt>
+            <dd id="stat-series-count">0</dd>
+          </div>
+          <div class="stat-card">
+            <dt>Sources</dt>
+            <dd id="stat-source-count">0</dd>
+          </div>
+          <div class="stat-card">
+            <dt>Metrics</dt>
+            <dd id="stat-metric-count">0</dd>
+          </div>
+        </dl>
       </section>
 
       <section class="panel chart-panel">
@@ -47,6 +88,10 @@
             <h2>Chart container scaffold</h2>
           </div>
         </div>
+        <p class="panel-copy" id="chart-placeholder">
+          Dataset loading will prepare the chart-ready series state used in the
+          next implementation phase.
+        </p>
         <div class="chart-frame">
           <canvas
             id="chart-preview"

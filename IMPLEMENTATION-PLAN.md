@@ -5,14 +5,14 @@
 - [x] Add `Chart.js` to the site.
 - [x] Choose the hosted file layout for the page and dataset assets.
 
-- [ ] Implement dataset loading.
-- [ ] Load `sweden_dataset.json` in the browser.
-- [ ] Parse the series records into a shape suitable for chart rendering and UI selection.
-- [ ] Handle loading and error states cleanly.
+- [x] Implement dataset loading.
+- [x] Load `sweden_dataset.json` in the browser.
+- [x] Parse the series records into a shape suitable for chart rendering and UI selection.
+- [x] Handle loading and error states cleanly.
 
-- [ ] Implement the overview section.
-- [ ] Add a short explanation of the dataset and included sources.
-- [ ] Add direct download links for the JSON and CSV outputs.
+- [x] Implement the overview section.
+- [x] Add a short explanation of the dataset and included sources.
+- [x] Add direct download links for the JSON and CSV outputs.
 
 - [ ] Implement chart explorer controls.
 - [ ] Add controls for selecting source, metric, and series.
