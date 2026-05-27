@@ -16,7 +16,6 @@ const selectedSourceNode = document.querySelector("#selected-source");
 const selectedMetricNode = document.querySelector("#selected-metric");
 const selectedSeriesNode = document.querySelector("#selected-series");
 const chartCanvasNode = document.querySelector("#chart-preview");
-const metaUnitNode = document.querySelector("#meta-unit");
 const metaUrlNode = document.querySelector("#meta-url");
 const metaNotesNode = document.querySelector("#meta-notes");
 const valueTableBodyNode = document.querySelector("#value-table-body");
@@ -526,10 +525,6 @@ function formatValue(value) {
 }
 
 function updateMetadataForSelection(selectedSeries) {
-  if (metaUnitNode) {
-    metaUnitNode.textContent = selectedSeries?.unit || "Not specified";
-  }
-
   if (metaUrlNode) {
     metaUrlNode.replaceChildren();
     if (selectedSeries?.url) {
