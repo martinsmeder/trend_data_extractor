@@ -285,9 +285,8 @@ function applyMode() {
   }
 
   if (modeCopyNode) {
-    modeCopyNode.textContent = detailMode
-      ? "Use single-chart mode to inspect one series with notes, source URL, and exact yearly values."
-      : "Use overview mode to scan all trends quickly. Notes and extra details are available in single-chart view.";
+    modeCopyNode.textContent =
+      "Overview shows all trends as a stacked chart list for fast scanning. Single chart focuses on one selected series and includes notes, source URL, and exact yearly values.";
   }
 }
 
@@ -490,7 +489,9 @@ function createOverviewChart(canvas, series) {
           borderColor: "#0f6a73",
           backgroundColor: "rgba(15, 106, 115, 0.08)",
           borderWidth: 2.5,
-          pointRadius: 0,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          pointBackgroundColor: "#0f6a73",
           tension: 0.25,
           fill: false,
           spanGaps: false,
@@ -501,6 +502,10 @@ function createOverviewChart(canvas, series) {
       responsive: true,
       maintainAspectRatio: false,
       animation: false,
+      interaction: {
+        mode: "nearest",
+        intersect: false,
+      },
       plugins: {
         legend: {
           display: false,
