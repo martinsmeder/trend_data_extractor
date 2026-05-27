@@ -16,6 +16,10 @@ const selectedSourceNode = document.querySelector("#selected-source");
 const selectedMetricNode = document.querySelector("#selected-metric");
 const selectedSeriesNode = document.querySelector("#selected-series");
 const chartCanvasNode = document.querySelector("#chart-preview");
+const metaUnitNode = document.querySelector("#meta-unit");
+const metaUrlNode = document.querySelector("#meta-url");
+const metaNotesNode = document.querySelector("#meta-notes");
+const valueTableBodyNode = document.querySelector("#value-table-body");
 
 if (statusNode) {
   statusNode.textContent = window.Chart ? "Chart.js ready" : "Chart.js failed to load";
@@ -349,6 +353,8 @@ function updateSelectionSummary() {
   }
 
   updateChartForSelection(selectedSeries);
+  updateMetadataForSelection(selectedSeries);
+  updateTableForSelection(selectedSeries);
 }
 
 function updateChartForSelection(selectedSeries) {
@@ -517,6 +523,75 @@ function formatValue(value) {
   return new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 2,
   }).format(value);
+}
+
+function updateMetadataForSelection(selectedSeries) {
+  if (metaUnitNode) {
+    metaUnitNode.textContent = selectedSeries?.unit || "Not specified";
+  }
+
+  if (metaUrlNode) {
+    metaUrlNode.replaceChildren();
+    if (selectedSeries?.url) {
+      const link = document.createElement("a");
+      link.href = selectedSeries.url;
+      link.textContent = selectedSeries.url;
+      link.target = "_blank";
+      link.rel = "noreferrer";
+      metaUrlNode.append(link);
+    } else {
+      metaUrlNode.textContent = "Not available";
+    }
+  }
+
+  if (metaNotesNode) {
+    metaNotesNode.replaceChildren();
+    const notes = selectedSeries?.notes || [];
+    if (!notes.length) {
+      metaNotesNode.textContent = "No notes provided.";
+      return;
+    }
+
+    const list = document.createElement("ul");
+    list.className = "note-list";
+    for (const note of notes) {
+      const item = document.createElement("li");
+      item.textContent = note;
+      list.append(item);
+    }
+    metaNotesNode.append(list);
+  }
+}
+
+function updateTableForSelection(selectedSeries) {
+  if (!valueTableBodyNode) {
+    return;
+  }
+
+  valueTableBodyNode.replaceChildren();
+  const observations = selectedSeries?.observations || [];
+
+  if (!observations.length) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 2;
+    cell.textContent = "No observations available.";
+    row.append(cell);
+    valueTableBodyNode.append(row);
+    return;
+  }
+
+  for (const observation of observations) {
+    const row = document.createElement("tr");
+    const yearCell = document.createElement("td");
+    const valueCell = document.createElement("td");
+
+    yearCell.textContent = String(observation.year);
+    valueCell.textContent = observation.valueText || formatValue(observation.value) || "Not available";
+
+    row.append(yearCell, valueCell);
+    valueTableBodyNode.append(row);
+  }
 }
 
 loadDataset();

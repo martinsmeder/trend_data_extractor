@@ -294,6 +294,85 @@ body {
   height: 100%;
 }
 
+.detail-stack {
+  width: min(760px, 100%);
+  margin: 1rem auto 0;
+}
+
+.metadata-panel,
+.table-panel {
+  padding: 1rem;
+  border: 1px solid rgba(96, 87, 75, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.metadata-list {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+}
+
+.metadata-list dt,
+.value-table th {
+  color: var(--muted);
+  font-family: Arial, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metadata-list dd {
+  margin: 0.4rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.note-list {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.note-list li + li {
+  margin-top: 0.35rem;
+}
+
+.metadata-list a {
+  color: var(--accent);
+}
+
+.table-panel {
+  margin-top: 1rem;
+}
+
+.table-heading h3 {
+  margin: 0;
+  line-height: 1.05;
+}
+
+.table-wrap {
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
+.value-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.value-table th,
+.value-table td {
+  padding: 0.8rem 0.85rem;
+  border-bottom: 1px solid rgba(96, 87, 75, 0.12);
+  text-align: left;
+}
+
+.value-table td {
+  font-size: 0.96rem;
+}
+
 code {
   padding: 0.1rem 0.3rem;
   border-radius: 0.3rem;

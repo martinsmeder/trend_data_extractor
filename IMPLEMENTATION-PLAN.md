@@ -24,9 +24,9 @@
 - [x] Show hover tooltips with year and value.
 - [x] Ensure the chart updates correctly when the user changes selections.
 
-- [ ] Implement metadata and notes display.
-- [ ] Show label, unit, source, source description, source file, and notes next to the chart.
-- [ ] Add a compact year-value table below the chart.
+- [x] Implement metadata and notes display.
+- [x] Show label, unit, source, source URL, and notes next to the chart.
+- [x] Add a compact year-value table below the chart.
 
 - [ ] Implement visual design and responsive behavior.
 - [ ] Apply a clear, restrained, research-friendly design.

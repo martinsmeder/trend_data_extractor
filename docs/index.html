@@ -131,7 +131,7 @@
         <div class="panel-heading">
           <div>
             <p class="section-label">Chart Area</p>
-            <h2>Chart container scaffold</h2>
+            <h2>Selected series view</h2>
           </div>
         </div>
         <p class="panel-copy" id="chart-placeholder">
@@ -144,6 +144,48 @@
             aria-label="Chart preview"
             role="img"
           ></canvas>
+        </div>
+        <div class="detail-stack">
+          <aside class="metadata-panel">
+            <p class="section-label">Series Metadata</p>
+            <dl class="metadata-list">
+              <div>
+                <dt>Unit</dt>
+                <dd id="meta-unit">Waiting</dd>
+              </div>
+              <div>
+                <dt>Source URL</dt>
+                <dd id="meta-url">Waiting</dd>
+              </div>
+              <div>
+                <dt>Notes</dt>
+                <dd id="meta-notes">Waiting</dd>
+              </div>
+            </dl>
+          </aside>
+        <div class="table-panel">
+          <div class="panel-heading table-heading">
+            <div>
+              <p class="section-label">Values</p>
+              <h3>Year and value table</h3>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="value-table">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody id="value-table-body">
+                <tr>
+                  <td colspan="2">Waiting for a selected series.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
         </div>
       </section>
     </main>
