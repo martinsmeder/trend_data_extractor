@@ -81,6 +81,52 @@
         </dl>
       </section>
 
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="section-label">Chart Explorer</p>
+            <h2>Select a series</h2>
+          </div>
+        </div>
+        <p class="panel-copy" id="explorer-copy">
+          Loading selection controls from the hosted dataset.
+        </p>
+        <div class="control-grid">
+          <label class="control-field">
+            <span>Source</span>
+            <select id="source-select" disabled>
+              <option>Loading</option>
+            </select>
+          </label>
+          <label class="control-field">
+            <span>Metric</span>
+            <select id="metric-select" disabled>
+              <option>Loading</option>
+            </select>
+          </label>
+          <label class="control-field control-field-wide">
+            <span>Series</span>
+            <select id="series-select" disabled>
+              <option>Loading</option>
+            </select>
+          </label>
+        </div>
+        <dl class="selection-summary">
+          <div>
+            <dt>Selected source</dt>
+            <dd id="selected-source">Waiting</dd>
+          </div>
+          <div>
+            <dt>Selected metric</dt>
+            <dd id="selected-metric">Waiting</dd>
+          </div>
+          <div>
+            <dt>Selected series</dt>
+            <dd id="selected-series">Waiting</dd>
+          </div>
+        </dl>
+      </section>
+
       <section class="panel chart-panel">
         <div class="panel-heading">
           <div>

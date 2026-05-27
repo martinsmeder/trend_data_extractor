@@ -14,15 +14,15 @@
 - [x] Add a short explanation of the dataset and included sources.
 - [x] Add direct download links for the JSON and CSV outputs.
 
-- [ ] Implement chart explorer controls.
-- [ ] Add controls for selecting source, metric, and series.
-- [ ] Add the selection logic for choosing a single series to display.
-- [ ] Keep the initial interaction model simple and obvious.
+- [x] Implement chart explorer controls.
+- [x] Add controls for selecting source, metric, and series.
+- [x] Add the selection logic for choosing a single series to display.
+- [x] Keep the initial interaction model simple and obvious.
 
-- [ ] Implement the line chart view.
-- [ ] Render a selected series as an interactive line chart.
-- [ ] Show hover tooltips with year and value.
-- [ ] Ensure the chart updates correctly when the user changes selections.
+- [x] Implement the line chart view.
+- [x] Render a selected series as an interactive line chart.
+- [x] Show hover tooltips with year and value.
+- [x] Ensure the chart updates correctly when the user changes selections.
 
 - [ ] Implement metadata and notes display.
 - [ ] Show label, unit, source, source description, source file, and notes next to the chart.
