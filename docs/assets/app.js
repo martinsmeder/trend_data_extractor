@@ -321,13 +321,15 @@ function updateChartForSelection(selectedSeries) {
   }
 
   const observations = selectedSeries?.observations || [];
-  const labels = observations.map((observation) => String(observation.year));
-  const values = observations.map((observation) => observation.value);
+  const points = observations.map((observation) => ({
+    x: observation.year,
+    y: observation.value,
+  }));
   const valueTexts = observations.map((observation) => observation.valueText);
 
-  chartInstance.data.labels = labels;
+  chartInstance.data.labels = [];
   chartInstance.data.datasets[0].label = selectedSeries?.label || "Series";
-  chartInstance.data.datasets[0].data = values;
+  chartInstance.data.datasets[0].data = points;
   chartInstance.data.datasets[0].valueTexts = valueTexts;
   chartInstance.options.plugins.title.text =
     selectedSeries?.label || "Selected series";
@@ -381,13 +383,10 @@ function createOverviewChart(canvas, series) {
   return new Chart(canvas, {
     type: "line",
     data: {
-      labels: series.observations.map((observation) =>
-        String(observation.year),
-      ),
       datasets: [
         {
           label: series.label,
-          data: series.observations.map((observation) => observation.value),
+          data: series.points,
           borderColor: "#0f6a73",
           backgroundColor: "rgba(15, 106, 115, 0.08)",
           borderWidth: 2.5,
@@ -439,7 +438,7 @@ function createOverviewChart(canvas, series) {
           enabled: true,
           callbacks: {
             title(items) {
-              return items[0] ? `Year ${items[0].label}` : "";
+              return items[0] ? `Year ${items[0].parsed.x}` : "";
             },
             label(context) {
               if (typeof context.parsed.y === "number") {
@@ -452,6 +451,7 @@ function createOverviewChart(canvas, series) {
       },
       scales: {
         x: {
+          type: "linear",
           title: {
             display: true,
             text: "Year",
@@ -466,6 +466,10 @@ function createOverviewChart(canvas, series) {
           },
           ticks: {
             color: "#60574b",
+            stepSize: 1,
+            callback(value) {
+              return String(value);
+            },
           },
         },
         y: {
@@ -555,7 +559,7 @@ function createChart(canvas) {
           enabled: true,
           callbacks: {
             title(items) {
-              return items[0] ? `Year ${items[0].label}` : "";
+              return items[0] ? `Year ${items[0].parsed.x}` : "";
             },
             label(context) {
               const textValue = context.dataset.valueTexts?.[context.dataIndex];
@@ -572,6 +576,7 @@ function createChart(canvas) {
       },
       scales: {
         x: {
+          type: "linear",
           title: {
             display: true,
             text: "Year",
@@ -586,6 +591,10 @@ function createChart(canvas) {
           },
           ticks: {
             color: "#60574b",
+            stepSize: 1,
+            callback(value) {
+              return String(value);
+            },
           },
         },
         y: {
