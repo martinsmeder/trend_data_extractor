@@ -19,7 +19,6 @@ const overviewChartListNode = document.querySelector("#overview-chart-list");
 const appState = {
   dataset: null,
   series: [],
-  metrics: [],
   sources: [],
   selectedSource: "",
   selectedMetric: "",
@@ -41,7 +40,6 @@ async function loadDataset() {
 
     appState.dataset = dataset;
     appState.series = parsed.series;
-    appState.metrics = parsed.metrics;
     appState.sources = parsed.sources;
 
     setSuccessState(parsed);
@@ -56,10 +54,9 @@ async function loadDataset() {
 function parseDataset(dataset) {
   const rawSeries = Array.isArray(dataset?.series) ? dataset.series : [];
   const series = rawSeries.map((item, index) => normalizeSeries(item, index));
-  const metrics = [...new Set(series.map((item) => item.metric))].sort();
   const sources = [...new Set(series.map((item) => item.source))].sort();
 
-  return { series, metrics, sources };
+  return { series, sources };
 }
 
 function normalizeSeries(item, index) {
@@ -115,8 +112,7 @@ function setSuccessState(parsed) {
 
   if (chartPlaceholderNode) {
     chartPlaceholderNode.textContent =
-      `${parsed.series.length} series are ready for chart rendering. ` +
-      "The next implementation step will bind these parsed records to chart and control UI.";
+      `${parsed.series.length} series are available for chart rendering.`;
   }
 
   if (explorerCopyNode) {
