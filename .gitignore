@@ -1,5 +1,8 @@
 data/
-examples/
+!docs/data/
+!docs/data/sweden_dataset.json
+!docs/data/sweden_dataset.csv
+!docs/data/.gitkeep
 outputs/
 __pycache__/
 *.py[cod]
