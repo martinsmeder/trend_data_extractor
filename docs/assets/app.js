@@ -111,13 +111,11 @@ function setSuccessState(parsed) {
   }
 
   if (chartPlaceholderNode) {
-    chartPlaceholderNode.textContent =
-      `${parsed.series.length} series are available for chart rendering.`;
+    chartPlaceholderNode.textContent = `${parsed.series.length} series are available for chart rendering.`;
   }
 
   if (explorerCopyNode) {
-    explorerCopyNode.textContent =
-      "Choose a source, metric, and series. The controls stay narrow and ordered so the first interaction remains obvious.";
+    explorerCopyNode.textContent = "Choose a source and metric.";
   }
 }
 

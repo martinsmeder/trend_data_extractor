@@ -9,12 +9,8 @@
   <body>
     <main class="page-shell">
       <header class="hero">
-        <p class="eyebrow">Sweden Drug Trends</p>
+        <p class="eyebrow">Swedish Drug Trends</p>
         <h1>Interactive chart viewer</h1>
-        <p class="intro">
-          A static research-facing site for exploring normalized Sweden drug
-          trend data from EUDA and FOHM workbooks.
-        </p>
         <section class="overview-card">
           <div class="overview-copy">
             <p class="section-label">Overview</p>
@@ -54,7 +50,11 @@
           inspect one series with notes and exact yearly values.
         </p>
         <div class="mode-switch" aria-label="Chart mode">
-          <button class="mode-button mode-button-active" id="mode-overview" type="button">
+          <button
+            class="mode-button mode-button-active"
+            id="mode-overview"
+            type="button"
+          >
             Overview
           </button>
           <button class="mode-button" id="mode-detail" type="button">
@@ -111,9 +111,7 @@
               <h2>Selected series view</h2>
             </div>
           </div>
-          <p class="panel-copy" id="chart-placeholder">
-            Loading chart data.
-          </p>
+          <p class="panel-copy" id="chart-placeholder">Loading chart data.</p>
           <div class="chart-frame">
             <canvas
               id="chart-preview"

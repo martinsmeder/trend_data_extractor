@@ -32,6 +32,12 @@ body {
   padding: 1rem 0 1.5rem;
 }
 
+.hero > .eyebrow,
+.hero > h1,
+.hero > .intro {
+  padding-left: 1.5rem;
+}
+
 .overview-card {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.9fr);
@@ -126,7 +132,6 @@ body {
   font-size: clamp(2.6rem, 7vw, 5rem);
 }
 
-.intro,
 .panel-copy,
 .layout-list {
   max-width: 72ch;
@@ -348,6 +353,12 @@ code {
     grid-template-columns: 1fr;
     padding: 1.1rem;
     border-radius: 20px;
+  }
+
+  .hero > .eyebrow,
+  .hero > h1,
+  .hero > .intro {
+    padding-left: 1.1rem;
   }
 
   .panel {
