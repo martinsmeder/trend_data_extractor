@@ -1,4 +1,4 @@
-from src.fohm.parser import (
+from extractor.fohm.parser import (
     extract_fohm_dataset,
     is_fohm_workbook,
     validate_fohm_dataset,

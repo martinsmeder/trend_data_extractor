@@ -5,8 +5,8 @@ import json
 from pathlib import Path
 from typing import Any
 
-from src.euda import extract_euda_dataset
-from src.fohm import extract_fohm_dataset
+from extractor.euda import extract_euda_dataset
+from extractor.fohm import extract_fohm_dataset
 
 
 def build_combined_dataset(input_dir: Path) -> dict[str, Any]:

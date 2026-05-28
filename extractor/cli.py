@@ -5,10 +5,22 @@ import json
 from pathlib import Path
 from typing import Any
 
-from src.dataset import build_combined_dataset, write_csv_dataset, write_json_dataset
-from src.euda import extract_euda_dataset, is_euda_workbook, validate_euda_dataset
-from src.fohm import extract_fohm_dataset, is_fohm_workbook, validate_fohm_dataset
-from src.workbook_reader import load_workbook
+from extractor.dataset import (
+    build_combined_dataset,
+    write_csv_dataset,
+    write_json_dataset,
+)
+from extractor.euda import (
+    extract_euda_dataset,
+    is_euda_workbook,
+    validate_euda_dataset,
+)
+from extractor.fohm import (
+    extract_fohm_dataset,
+    is_fohm_workbook,
+    validate_fohm_dataset,
+)
+from extractor.workbook_reader import load_workbook
 
 
 def build_parser() -> argparse.ArgumentParser:

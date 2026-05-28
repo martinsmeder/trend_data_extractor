@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This repository is currently centered on source spreadsheets in [`data/`](/home/martin/repos/trend_data_extractor/data) and high-level notes in [`README.md`](/home/martin/repos/trend_data_extractor/README.md). Keep raw input files in `data/` and treat them as immutable reference inputs. Add extractor code under `src/` as the project grows, organized by dataset or source, for example `src/euda/` or `src/parsers/treatment_demand.py`. Place tests in `tests/` with fixtures in `tests/fixtures/`.
+This repository is currently centered on source spreadsheets in [`data/`](/home/martin/repos/trend_data_extractor/data) and high-level notes in [`README.md`](/home/martin/repos/trend_data_extractor/README.md). Keep raw input files in `data/` and treat them as immutable reference inputs. Add extractor code under `extractor/` as the project grows, organized by dataset or source, for example `extractor/euda/` or `extractor/parsers/treatment_demand.py`. Place tests in `tests/` with fixtures in `tests/fixtures/`.
 
 ## Build, Test, and Development Commands
 
@@ -11,7 +11,7 @@ There is no build system checked in yet, so contributors should keep automation 
 - `python -m venv .venv && source .venv/bin/activate`: create a local environment.
 - `pip install -r requirements.txt`: install dependencies once that file exists.
 - `pytest`: run the test suite.
-- `python -m src.<module>`: run a parser module directly during development.
+- `python -m extractor.<module>`: run a parser module directly during development.
 
 If you introduce a task runner such as `Makefile` or `justfile`, document the canonical commands here and in `README.md`.
 
