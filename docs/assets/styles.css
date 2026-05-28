@@ -16,9 +16,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, rgba(15, 106, 115, 0.12), transparent 28%),
-    linear-gradient(180deg, #faf7f0 0%, var(--page-bg) 100%);
+  background: linear-gradient(180deg, #faf7f0 0%, var(--page-bg) 100%);
   color: var(--ink);
   font-family: Georgia, "Times New Roman", serif;
 }
@@ -42,9 +40,7 @@ body {
   padding: 1.5rem;
   border: 1px solid rgba(96, 87, 75, 0.12);
   border-radius: 24px;
-  background:
-    linear-gradient(135deg, rgba(15, 106, 115, 0.08), transparent 48%),
-    var(--panel-bg);
+  background: var(--panel-bg);
   box-shadow: var(--shadow);
 }
 
